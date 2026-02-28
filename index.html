@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!-- Define el documento como HTML5 -->
+<html lang="en">
+<head>
+    <!-- Configuración de codificación de caracteres -->
+    <meta charset="UTF-8">
+
+    <!-- Hace que el diseño sea responsive en dispositivos móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título que aparece en la pestaña del navegador -->
+    <title>Qubik</title>
+
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="src/Styles/styles.css">
+</head>
+
+<body>
+    <!-- Contenedor principal de la aplicación -->
+    <div class="contenedor">
+        
+        <!-- Sección superior: menú de scramble y timer -->
+        <div class="scramble-menu">
+
+            <!-- Input donde se muestra o edita la notación del scramble -->
+            <input type="text" class="notacion">
+    
+            <div class="botones">
+
+                <!-- Botón para generar nuevo scramble -->
+                <button class="btn2">R</button>
+                
+                <!-- Checkbox para habilitar edición manual del scramble -->
+                <label class="label">
+                    E
+                    <input type="checkbox" class="btn2 check">
+                </label>
+
+                <!-- Botón para copiar el scramble -->
+                <button class="btn2">C</button>
+
+                <!-- Elemento donde se muestra el tiempo del cronómetro -->
+                <p class="time">0.00</p>
+                
+            </div>
+        </div>
+
+        <!-- Contenedor donde se renderiza visualmente el cubo -->
+        <div class="cubo"></div>
+
+        <!-- Sección destinada a mostrar el historial de solves -->
+        <div class="archivador"></div>
+
+        <!-- Sección destinada a mostrar promedios y estadísticas -->
+        <div class="promedios"></div>
+
+    </div>
+
+    <!-- Script principal de la aplicación -->
+    <script src="./src/scrambler/scramblerMain.js" type="module"></script>
+
+    <!-- Script relacionado con la base de datos -->
+    <script type="module" src="./src/core/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+/* Reset básico y configuración general del fondo */
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #222;
+    height: 100vh;
+}
+
+/* Contenedor principal dividido en 3 columnas */
+.contenedor{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    height: 100vh;
+}
+
+/* Estructura del cubo principal y miniatura usando grid */
+.cubo, .mini_cubo{
+    display: grid;
+    grid-template-columns: repeat(4, 85px);
+    grid-template-rows: repeat(3, 85px);
+    margin: auto;
+    margin-top: 50px;
+}
+
+/* Cada cara del cubo (estructura interna 3x3) */
+.cara{
+    width: 65px;
+    height: 65px;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(3,30%);
+    grid-template-rows: repeat(3,30%);
+    gap: 7px;
+}
+
+/* Input donde se muestra o edita la notación */
+.notacion{
+    width: 450px;
+    user-select: none;
+}
+
+/* Estilo visual del cronómetro */
+.time{
+    display: flex;
+    background-color: #ccc;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    text-align: center;
+    font-size: 30px;
+    font-family: sans-serif;
+}
+
+/* Panel donde se guardan los tiempos registrados */
+.archivador{
+    display: flex;
+    flex-direction: column;
+    background-color: #444;
+    border: 1px solid white;
+    width: 250px;
+    height: 280px;
+    padding: 20px 15px;
+    position: relative;
+    top:-30px;
+    gap: 8px;
+    overflow-y: scroll;
+}
+
+/* Contenedor individual de cada registro */
+.data{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Línea que agrupa índice y tiempo */
+.record{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+
+/* Estilo base para índice y tiempo */
+.indice, .tiempo{
+    font-family: sans-serif;
+    font-size: 20px;
+    padding: 3px 0;
+}
+
+/* Número del solve */
+.indice{
+    color: #bbb;
+    font-weight: bold;
+}
+
+/* Tiempo registrado */
+.tiempo{
+    color: #090;
+    font-weight: 200;
+}
+
+/* Efecto visual al pasar el mouse sobre el tiempo */
+.tiempo:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Posicionamiento específico de cada cara del cubo */
+.cara:nth-child(1){
+    grid-column: 2/3;
+    grid-row: 1/2;
+}
+
+.btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Botones secundarios pequeños */
+.mini_btn{
+    background-color: transparent;
+    border: none;
+    color: #777;
+    font-family: sans-serif;
+    font-size: 17px;
+    padding: 7px 9px;
+    font-weight: bold;
+}
+
+/* Botón activo dentro del grupo */
+.mini_btn:nth-child(3){
+    color: #bbb;
+}
+
+.mini_btn:hover{
+    cursor: pointer;
+}
+
+/* Resto del posicionamiento de caras */
+.cara:nth-child(2){
+    grid-column: 4/5;
+    grid-row: 2/3;
+}
+
+.cara:nth-child(3){
+    grid-column: 2/3;
+    grid-row: 2/3;
+}
+
+.cara:nth-child(4){
+    grid-column: 2/3;
+    grid-row: 3/4;
+}
+
+.cara:nth-child(5){
+    grid-column: 3/4;
+    grid-row: 2/3;
+}
+
+.cara:nth-child(6){
+    grid-column: 1/2;
+    grid-row: 2/3;
+}
+
+/* Cada sticker individual del cubo */
+.cara div{
+    width: 100%;
+    height: 100%;
+}
+
+/* Oculta visualmente el checkbox */
+.check{
+    display: none;
+}
+
+/* Colores de cada cara del cubo */
+.white{
+    border: 1px solid #fff;
+    background-color: #fff;
+}
+
+.blue{
+    border: 1px solid blue;
+    background-color: blue;
+}
+
+.green{
+    border: 1px solid green;
+    background-color: green;
+}
+
+.yellow{
+    border: 1px solid yellow;
+    background-color: yellow;
+}
+
+.red{
+    border: 1px solid red;
+    background-color: red;
+}
+
+.orange{
+    border: 1px solid orange;
+    background-color: orange;
+}
+
+/* Estilo base de botones y labels */
+button, .label{
+    padding: 10px 15px;
+    background-color: #eee;
+    font-family: sans-serif;
+    font-size: 18px;
+    user-select: none;
+}
+
+/* Overlay que cubre toda la pantalla (modal activo) */
+.overlay_card{
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #000c;
+    position: absolute;
+    z-index: 1;
+}
+
+/* Tarjeta/modal principal */
+.card{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: #222;
+    height: 90%;
+    width: 35%;
+    border-radius: 30px;
+}
+
+/* Contenedor superior de botones del modal */
+.btns_card_top{
+    display: flex;
+    min-width: 100%;
+    justify-content: end;
+    align-items: end;
+    height: 11%;
+    position: relative;
+}
+
+/* Botones principales del modal */
+.btn_card_start{
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Ajustes individuales por posición */
+.btn_card_start:first-child{
+    position: absolute;
+    left: 0;
+    margin-left: 20px;
+}
+
+.btn_card_start:nth-child(2){
+    margin-right: 10px;
+}
+
+.btn_card_start:nth-child(3){
+    justify-self: end;
+    align-self: start;
+    margin: 0;
+    background-color: transparent;
+    color: #ccc;
+    font-family: sans-serif;
+    font-size: 22px;
+    border: none;
+    padding: 20px;
+}
+
+.btn_card_start:nth-child(3):hover{
+    cursor: pointer;
+}
+
+/* Opciones internas del modal */
+.options_card{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+/* Botones inferiores del modal */
+.btn_card_bottom{
+    display: flex;
+    margin: auto;
+    gap: 10px;
+}
+
+.btn_card_end{
+    font-size: 17px;
+    padding: 4px 9px;
+    background-color: #444;
+    color: white;
+    border: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn_card_end:first-child{
+    cursor: initial;
+}
+
+/* Tiempo grande mostrado en la tarjeta */
+.time_card{
+    font-size: 83px;
+    font-family: sans-serif;
+    color: white;
+    text-align: center;
+}
+
+/* Fecha del solve */
+.date_card{
+    font-size: 14px;
+    margin: 10px;
+    font-family: monospace;
+    color: #ccc;
+    text-align: center;
+}
+
+/* Sección del scramble dentro del modal */
+.scramble_card{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+/* Contenedor del mini cubo en la tarjeta */
+.cubo_card{
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+}
+
+.cubo_card .mini_cubo{
+    margin: auto;
+}
+
+/* Texto que muestra la combinación */
+.combination_card{
+    margin: auto;
+    margin-top: 20px;
+    text-wrap: wrap;
+    width: 80%;
+    color: white;
+    font-family: monospace;
+    font-size: 19px;
+    text-align: center;
+}
+
+/* Sección general de promedios */
+.promedios{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: #666;
+    border-radius: 30px;
+}
+
+/* Grid interno de estadísticas */
+.box_promedios{
+    display: grid;
+    grid-template-columns: repeat(3, 155px);
+    grid-template-rows: repeat(3, 1fr);
+    margin: auto;
+    gap: 8px;
+}
+
+/* Tarjetas individuales de promedio */
+.promedios_ao5{
+    display: flex;
+    flex-direction: column;
+    background-color: #333;
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Tarjeta central más grande */
+.promedios_ao5:nth-child(5){
+    grid-column: 1/3;
+    grid-row: 2/4;
+}
+
+/* Select dentro de tarjeta de promedio */
+.promedios_ao5 select{
+    margin: 5px 13px;
+    padding: 9px;
+    padding-bottom: none;
+    width: 80%;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: transparent;
+    border: none;
+    transition: 2s border;
+}
+
+.promedios_ao5 select:hover{
+    cursor: pointer;
+}
+
+.promedios_ao5 option{
+    background-color: #333;
+    border: none;
+}
+
+/* Tiempo promedio mostrado */
+.time_promedio{
+    display: flex;
+    margin: auto;
+    margin-top: 1px;
+    margin-bottom: none;
+    font-size: 25px;
+    color: white;
+    font-family: sans-serif;
+    margin-bottom: 10px;
+}
+
+.time_promedio:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Contenedor de fechas */
+.dates{
+    display: flex;
+    padding: 10px;
+}
+
+.dates h2{
+    padding: 5px;
+    margin: auto;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: sans-serif;
+}
