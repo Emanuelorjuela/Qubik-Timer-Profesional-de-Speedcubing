@@ -122,6 +122,23 @@ La preferencia seleccionada se guarda en un segundo object store de IndexedDB ll
 
 ---
 
+## 14. Sistema de flujo de datos y persistencia
+
+El sistema implementa un flujo de datos secuencial donde la base de datos actúa como fuente única de verdad. Cada acción relevante —registro de tiempo, aplicación de penalización o eliminación— sigue el mismo patrón estructural para garantizar coherencia entre almacenamiento, tabla, tarjeta de solve y estadísticas.
+
+Cuando el cronómetro se detiene, se construye el objeto *solve* con todos sus atributos: tiempo base, scramble activo, fecha y estados de penalización inicializados. Este objeto se guarda inmediatamente en IndexedDB dentro del object store `cube3x3`. Solo después de confirmarse la escritura se procede al renderizado.
+
+Primero se actualiza la tabla de tiempos insertando la nueva solve vinculada a su identificador persistido. Luego, si corresponde, se renderiza o actualiza la tarjeta de la solve seleccionada. Finalmente, el sistema recalcula todas las estadísticas tomando exclusivamente los datos almacenados en la base de datos, evitando cálculos sobre estados temporales del frontend.
+
+Las penalizaciones (+2 y DNF) siguen el mismo flujo. Al aplicarse, el registro se actualiza en IndexedDB modificando sus propiedades internas. Tras la confirmación, se re-renderiza la fila correspondiente, se actualiza la tarjeta y se recalculan las métricas dependientes. Esto garantiza que cualquier cambio mantenga consistencia estructural y persistencia completa.
+
+El flujo general puede resumirse como:
+
+Cronómetro → Creación de solve → Escritura en IndexedDB → Render tabla → Render tarjeta → Recalcular estadísticas.
+
+Gracias a esta arquitectura, el sistema evita desincronización entre estado visual y datos persistidos, manteniendo integridad incluso tras recargas de la aplicación.
+
+
 ## 12. Persistencia y funcionamiento offline
 
 Tanto cube3x3 como promDB se almacenan de forma persistente en IndexedDB. Esto permite que, al cerrar o reiniciar la aplicación, todos los tiempos, penalizaciones, estadísticas y configuraciones permanezcan intactos. Al iniciarse nuevamente, el sistema reconstruye el estado completo del usuario y recalcula las métricas correspondientes sin pérdida de información.
