@@ -1,8 +1,4 @@
-# **1. Qubik Timer — Speedcubing Trainer (3×3)**
-
-Qubik Timer es una aplicación web de escritorio diseñada para practicar resolución de cubo Rubik 3×3 en condiciones tipo competición. La aplicación genera mezclas (scrambles) oficiales, renderiza un cubo 2D con la misma lógica de movimientos que un cubo 3D real, ofrece un cronómetro con la mecánica competitiva, guarda cada resolución (solve) en una base de datos local y calcula estadísticas oficiales en tiempo real. Este README explica qué hace el proyecto, cómo funciona internamente y cómo instalar/usar el código; está escrito para ser comprensible tanto para personas que conocen speedcubing como para quienes no.
-
----
+# **Qubik Timer — Speedcubing Trainer (3×3)**
 
 # **2. Descripción general**
 
