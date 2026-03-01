@@ -1,85 +1,255 @@
-# **Qubik Timer — Speedcubing Trainer (3×3)**
+# Qubik Timer
 
-# **2. Descripción general**
+##1. Aplicación web de práctica profesional para speedcubing (3x3)
 
-La idea central es reproducir el flujo básico de una sesión de entrenamiento de speedcubing: generar un scramble, aplicar ese scramble al cubo (el usuario replica la misma secuencia en su cubo físico), cronometrar la resolución, guardar el resultado y actualizar las estadísticas. El cubo se representa visualmente en 2D desde una única perspectiva (cara blanca arriba, verde al frente), que es la orientación estándar para aplicar scrambles en competiciones. Aunque la vista es 2D, los movimientos y la lógica interna replican fielmente las rotaciones y efectos de un cubo 3D. Cada “sticker” es una clase CSS que indica color; los movimientos se implementan intercambiando clases entre índices que representan posiciones físicas del cubo.
+Qubik Timer es una aplicación web orientada a la práctica formal de speedcubing bajo estándares de competencia. El speedcubing consiste en resolver un cubo de Rubik en el menor tiempo posible utilizando scrambles oficiales y métricas estadísticas reguladas. Este proyecto reproduce ese entorno competitivo de forma digital: genera scrambles válidos, mide tiempos con lógica anti-accidental, registra cada solve en almacenamiento persistente y calcula estadísticas oficiales en tiempo real sin recargar la aplicación.
 
-Un usuario típico: genera o edita un scramble, replica ese scramble en su cubo físico, prepara el cubo y usa la barra espaciadora según la mecánica (mantener 300 ms y soltar para iniciar, presionar para detener). Al detenerse, el sistema crea y guarda un objeto con la información del solve, lo muestra en la lista de historial y recalcula todas las estadísticas en tiempo real.
+El objetivo del proyecto no es únicamente cronometrar resoluciones, sino modelar el flujo completo de entrenamiento competitivo: scramble → ejecución → registro → penalización → análisis estadístico → comparación histórica.
 
----
+##2. Enfoque técnico general
 
-# **3. Flujo funcional (qué sucede cuando usas la app)**
+La aplicación está desarrollada en HTML5, CSS y JavaScript moderno con ES Modules. La arquitectura es completamente modular y organizada en /src, separando responsabilidades en carpetas como core, scrambler, database, averages y styles. Existe un único punto de entrada desde core/main.js, evitando múltiples entry points en el HTML y manteniendo control estructural estricto.
 
-Cuando el usuario abre la aplicación se inicializa IndexedDB y se renderiza la interfaz en base a los datos almacenados. El generador crea scrambles de 20–23 movimientos aplicando restricciones para evitar secuencias redundantes o trivialmente simplificables (por ejemplo, evita R R que es R2, L L L que equivale a L', o patrones alternados R L R que simplifican). El scramble aparece en un campo input y se aplica automáticamente al cubo renderizado; si el usuario edita ese input, el cubo se actualiza en tiempo real con los movimientos válidos introducidos.
+La persistencia se implementa mediante IndexedDB, utilizando una base de datos llamada registros (versión 2) con dos object stores:
 
-El cronómetro opera con la lógica competitiva: para iniciar se mantiene presionada la barra espacio ≥ 300 ms y al soltar comienza la medición; para detener se vuelve a presionar. Al detenerse, se crea un objeto solve que contiene el tiempo, scramble, fecha, tipo de cubo y dos flags por penalización (masDos y dnf). Ese objeto se guarda en IndexedDB (store cube3x3) y se muestra inmediatamente en la lista del frontend. Las penalizaciones +2 y DNF se pueden aplicar desde la lista o desde la vista detallada del solve (overlay); cualquier cambio se persiste en la DB y recalcula las estadísticas al instante.
+cube3x3 para los solves.
 
----
+promDB para configuraciones de promedios (actual / best).
 
-# **4. Detalle técnico del modelo del cubo y movimientos**
+La aplicación funciona completamente offline y todos los datos permanecen almacenados de forma persistente en el navegador.
 
-Aunque la interfaz es 2D, la representación sigue índices equivalentes a la estructura 3×3 de cada cara. Cada cara es una matriz de 9 posiciones; los movimientos se implementan con funciones que rotan internamente esa matriz y reasignan stickers entre caras adyacentes según reglas de cubo real. Las operaciones soportadas incluyen movimientos simples (R, L, U, D, F, B), inversos (R', L', …) y dobles (R2, …). Las funciones están separadas por tipo: rotaciones internas de cara y transferencias entre caras (lateral / superior-inferior / frente-atrás). estadoCero() devuelve el cubo a su estado resuelto re-asignando las clases de color por cara.
+Modelo lógico del cubo 3x3
 
----
+Se modeló un cubo Rubik 3x3 en 2D desde una perspectiva fija: blanco arriba y verde al frente, que es la orientación estándar utilizada en competiciones oficiales para la aplicación de scrambles.
 
-# **5. Penalizaciones y sincronización**
+Aunque la representación es bidimensional, la lógica interna replica exactamente el comportamiento físico de un cubo tridimensional real. Cada sticker está representado mediante clases que identifican su color. Internamente, el estado del cubo se gestiona a través de índices que representan posiciones específicas de cada sticker.
 
-La aplicación implementa dos estados de penalización estandarizados: +2 y DNF. +2 suma 2 segundos al tiempo y se usa cuando el solve es válido pero hubo una infracción menor. DNF marca la resolución como no válida. Cuando el usuario aplica una penalización, el valor mostrado en la interfaz cambia (color naranja para +2, rojo para DNF), y la entrada correspondiente en IndexedDB se actualiza. Las estadísticas se recalculan inmediatamente para reflejar cualquier cambio en tiempo real.
+Los movimientos básicos (R, L, U, D, F, B) y sus variantes (’, 2) se implementan como intercambios matemáticos de esos índices. Cuando se ejecuta un movimiento, el sistema reubica las clases de color correspondientes simulando la rotación real de la cara y de las capas adyacentes. Esto garantiza consistencia lógica absoluta entre el estado visual renderizado y las reglas físicas del cubo real.
 
----
+El cubo siempre parte de un estado completamente resuelto (estadoCero). Cualquier modificación del estado proviene exclusivamente de movimientos válidos aplicados desde el scramble o desde edición manual.
 
-# **6. Estadísticas (explicación y reglas aplicadas)**
 
-La app calcula ocho métricas principales y las mantiene actualizadas en tiempo real:
 
-Mo3 calcula la media directa de los 3 últimos tiempos. No permite DNFs; si aparece un DNF en el conjunto, el resultado de Mo3 es DNF.
+El generador produce secuencias aleatorias entre 20 y 23 movimientos, alineándose con estándares utilizados en competencia.
 
-Ao5 toma 5 tiempos, elimina el mejor y el peor, y promedia los 3 restantes. Su límite de DNFs es 1: si hay más de uno la estadística es DNF.
+El algoritmo no genera movimientos arbitrarios simples. Incluye restricciones algebraicas para evitar secuencias redundantes o simplificables, como:
 
-Ao12 toma 12 tiempos, elimina el mejor y el peor y promedia los 10 restantes. Límite de DNFs: 1.
+R R (equivalente a R2)
 
-Ao25 toma 25 tiempos, elimina los 2 mejores y 2 peores, y promedia los 21 restantes. Límite de DNFs: 2.
+L L L (equivalente a L’)
 
-Ao50 toma 50 tiempos, elimina los 3 mejores y 3 peores, y promedia los 44 restantes. Límite de DNFs: 3.
+Patrones paralelos como R L R que pueden simplificarse
 
-Ao100 toma 100 tiempos, elimina los 5 mejores y 5 peores, y promedia los 90 restantes. Límite de DNFs: 5.
+Estas restricciones garantizan scrambles limpios, no reducibles y representativos de entorno competitivo real.
 
-La Media calcula el promedio de todos los tiempos almacenados. Su límite de DNFs es dinámico: si hay menos de 100 registros se aplica la regla de la estadística inmediatamente inferior (por ejemplo, con 30 tiempos aplica la lógica de Ao25); si hay más de 100, el límite se acumula por bloques (por ejemplo, con 230 tiempos se suman dos bloques de 100 y un bloque de 25, resultando en 12 DNFs permitidos). Single muestra el mejor tiempo individual (excluye DNFs).
+El scramble generado se escribe en un input que es interpretado en tiempo real. Cada movimiento válido se ejecuta inmediatamente sobre el render del cubo, manteniendo sincronización directa entre notación textual y estado visual.
 
-Cada AoX en la UI tiene un selector que permite ver “Actual” (promedio de los últimos X tiempos) o “Best” (mejor promedio histórico). Esa preferencia se guarda en el store promDB para persistencia entre sesiones.
+El usuario ejecuta físicamente ese scramble en su cubo real para asegurar que el entorno digital y físico coincidan exactamente.
 
----
+##3. Controles de scramble
 
-# **7. Persistencia de datos**
+La interfaz incluye dos controles principales:
 
-El proyecto usa IndexedDB para almacenamiento local sin servidor. Hay al menos dos objectStores: cube3x3 para cada solve registrado y promDB para las preferencias de visualización de promedios. Los datos persisten entre cierres del navegador y reinicios de la app, permitiendo continuidad y rehidratación completa del estado en cada sesión.
+R (Reiniciar): devuelve el cubo a estado resuelto, genera automáticamente un nuevo scramble, lo inserta en el input y lo ejecuta para renderizar la nueva mezcla.
 
----
+E (Editar): permite modificar manualmente la secuencia de movimientos. Cualquier modificación válida se ejecuta en tiempo real sobre el cubo renderizado.
 
-# **8. Estructura del proyecto (organización recomendada)**
+Esto permite tanto práctica estándar como análisis técnico de casos específicos.
 
-La estructura mostrada es la que se utilizó para desarrollar y organizar responsabilidades. Mantener nombres de carpetas en minúsculas es importante por sensibilidad a mayúsculas en entornos y para evitar errores de importación.
+##4. Cronómetro con lógica de competencia
 
----
+El sistema de timing replica la activación estándar de competencia.
 
-# **9. Tecnologías utilizadas**
+Para iniciar el cronómetro, el usuario debe mantener presionada la barra espaciadora durante al menos 300 ms y luego soltarla. Esto evita activaciones accidentales. El tiempo comienza al soltar la tecla y se detiene al volver a presionarla.
 
-La aplicación utiliza únicamente tecnologías web estándar y nativas del navegador: HTML5 para la estructura, CSS3 para estilos y diseño, JavaScript moderno (ES Modules) para toda la lógica. IndexedDB se usa para persistencia local. El proyecto está preparado para ejecutarse en un servidor local sencillo (ej.: http-server, XAMPP, Live Server en VS Code) o desplegarse en hosting estático.
+Al detenerse:
 
----
+Se registra la solve.
 
-# **10. Uso e instalación rápida**
+El cubo regresa automáticamente a estado cero.
 
-Para probar localmente, clona el repositorio, abre la carpeta en un servidor local (no abrir file:// directamente porque los módulos ES y algunas APIs requieren servidor). Asegúrate de mantener la estructura de carpetas y las rutas en minúsculas. Abre index.html a través del servidor; la app inicializará la base de datos y renderizará la interfaz. El entry point es src/core/main.js.
+Se genera un nuevo scramble.
 
----
+Las estadísticas se actualizan en tiempo real.
 
-# **11. Consejos operativos y notas de desarrollo**
+El flujo es continuo y no requiere interacción adicional para continuar entrenando.
 
-Es crítico mantener nombres de carpetas y archivos en minúsculas y verificar las rutas relativas en todos los import debido a que la resolución de módulos es case-sensitive en muchos entornos. Debe existir un único entry point cargado desde index.html; todos los demás módulos se importan desde ahí para evitar doble ejecución o conflictos. Si se trabaja con Git en Windows y se necesita cambiar solo el casing de una carpeta, renómbrala en dos pasos (temp → desired) para que Git detecte el cambio.
+Aquí puede añadirse un GIF mostrando:
 
----
+Activación del timer.
 
-# **12. Estado del proyecto y roadmap**
+Cambio de color de estado antes de iniciar.
 
-La funcionalidad central está implementada: generador de scrambles, render del cubo, cronómetro competitivo, almacenamiento persistente y cálculo de estadísticas en tiempo real. Quedan tareas pendientes de pulido visual (mejorar overlays de promedios, diseño de tarjetas, responsividad) y ampliación de funcionalidades (soporte para otros tipos de cubo, exportación de datos, personalización de reglas de cálculo). La primera versión pública será para escritorio centrada en 3×3; versiones
+Registro automático y nuevo scramble.
+
+##5. Estructura de datos de cada solve
+
+Cada vez que se detiene el cronómetro se construye un objeto solve con:
+
+time
+
+scramble
+
+date (formato en-US)
+
+dnf (boolean)
+
+masDos (boolean)
+
+timeMasDos
+
+typeCube
+
+Por defecto, dnf y masDos son false.
+
+Cada registro se almacena en el object store cube3x3 de IndexedDB.
+
+##6. Penalizaciones y gestión de registros
+
+Cada tiempo se renderiza inmediatamente en una tabla del frontend.
+
+Cada fila permite:
+
+Aplicar penalización +2
+
+Aplicar penalización DNF
+
+Eliminar la solve (botón X)
+
+Cuando se aplica +2:
+
+Se suman dos segundos al tiempo.
+
+Se actualiza tanto frontend como base de datos.
+
+El tiempo cambia visualmente a color naranja.
+
+Cuando se aplica DNF:
+
+El tiempo se muestra como “DNF”.
+
+Cambia visualmente a rojo.
+
+Se actualiza el boolean correspondiente en la base de datos.
+
+El botón X elimina completamente el registro del frontend y de cube3x3.
+
+Todos los cambios impactan inmediatamente en las estadísticas.
+
+##7. Overlay detallado por solve
+
+Cada tiempo es seleccionable. Al hacer clic se abre un overlay con:
+
+Tiempo registrado
+
+Fecha
+
+Tipo de cubo
+
+Scramble en notación oficial
+
+Render del estado correspondiente
+
+Desde esta vista también pueden:
+
+Aplicarse penalizaciones
+
+Copiar el scramble
+
+Eliminar la solve
+
+Cerrar el overlay
+
+Toda acción se sincroniza inmediatamente con la base de datos y con las estadísticas visibles.
+
+Aquí pueden añadirse GIFs del overlay y su interacción.
+
+## 4. Sistema de estadísticas oficiales
+
+La aplicación implementa métricas estándar de competencia:
+
+Mo3 calcula la media directa de 3 tiempos. No permite ningún DNF.
+
+Ao5 elimina el mejor y el peor tiempo y promedia los 3 restantes. Permite máximo 1 DNF.
+
+Ao12 elimina el mejor y el peor tiempo y promedia los 10 restantes. Permite máximo 1 DNF.
+
+Ao25 elimina los 2 mejores y 2 peores tiempos y promedia 21. Permite máximo 2 DNFs.
+
+Ao50 elimina los 3 mejores y 3 peores tiempos y promedia 44. Permite máximo 3 DNFs.
+
+Ao100 elimina los 5 mejores y 5 peores tiempos y promedia 90. Permite máximo 5 DNFs.
+
+Single obtiene el mejor tiempo individual excluyendo DNFs.
+
+Media calcula el promedio total de todos los registros almacenados. El límite de DNF es dinámico y depende del total de solves. Cuando el total supera 100, el límite se acumula por bloques de 100 y bloques intermedios equivalentes (por ejemplo, 230 tiempos generan un límite acumulado de 12 DNFs según la suma proporcional de bloques).
+
+Todas las estadísticas se recalculan en tiempo real cada vez que:
+
+Se agrega una solve
+
+Se elimina una solve
+
+Se aplica o retira +2
+
+Se aplica o retira DNF
+
+No existe necesidad de recargar la aplicación.
+
+Average of X: actual vs best
+
+Las estadísticas AoX incluyen un selector que permite alternar entre:
+
+actual: promedio calculado con los últimos X tiempos registrados.
+
+best: mejor promedio histórico de X tiempos almacenado en la base de datos.
+
+La preferencia seleccionada se guarda en promDB, lo que permite persistencia total entre sesiones.
+
+Persistencia y base de datos
+
+La base registros contiene:
+
+cube3x3 con todos los solves.
+
+promDB con configuraciones de visualización de promedios.
+
+Al cerrar o reiniciar la aplicación:
+
+Todos los tiempos permanecen.
+
+Las penalizaciones permanecen.
+
+Las estadísticas se recalculan al iniciar.
+
+Las preferencias de visualización se restauran.
+
+La aplicación es completamente offline-first.
+
+Estado actual del proyecto
+
+La lógica central del sistema está implementada y funcional:
+
+Modelo de cubo consistente.
+
+Generador de scrambles con restricciones.
+
+Timer competitivo con activación controlada.
+
+Persistencia robusta con IndexedDB.
+
+Estadísticas oficiales con reglas formales.
+
+Renderizado reactivo en tiempo real.
+
+Actualmente se encuentra en fase de refinamiento visual. Algunos overlays de estadísticas y aspectos de diseño general están en proceso de pulido antes de la primera versión pública estable.
+
+La primera versión estará orientada exclusivamente a escritorio y centrada en 3x3. En fases posteriores se contempla:
+
+Soporte para nuevos tipos de cubo.
+
+Estadísticas configurables.
+
+Adaptación completa a dispositivos móviles.
+
+Mejora del sistema visual y experiencia de usuario.
