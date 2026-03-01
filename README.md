@@ -48,6 +48,8 @@ El botón R (Reiniciar) devuelve el cubo a su estado completamente resuelto y ge
 
 El botón E (Editar) permite modificar manualmente la secuencia de movimientos. Cualquier cambio válido en el input se refleja en tiempo real en el estado lógico y visual del cubo. Esto permite análisis de casos específicos, pruebas técnicas o estudio de situaciones particulares.
 
+El botón C (Copiar) copia al portapapeles el scramble actualmente activo en notación oficial. Su función es permitir que el usuario pueda reutilizar la mezcla fuera de la aplicación, ya sea para compartirla, registrarla en otro entorno, repetir una misma situación en múltiples sesiones o analizarla con herramientas externas.
+
 ---
 
 ## 6. Cronómetro con lógica de competencia
