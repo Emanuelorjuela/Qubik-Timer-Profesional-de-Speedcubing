@@ -132,12 +132,6 @@ Primero se actualiza la tabla de tiempos insertando la nueva solve vinculada a s
 
 Las penalizaciones (+2 y DNF) siguen el mismo flujo. Al aplicarse, el registro se actualiza en IndexedDB modificando sus propiedades internas. Tras la confirmación, se re-renderiza la fila correspondiente, se actualiza la tarjeta y se recalculan las métricas dependientes. Esto garantiza que cualquier cambio mantenga consistencia estructural y persistencia completa.
 
-El flujo general puede resumirse como:
-
-Cronómetro → Creación de solve → Escritura en IndexedDB → Render tabla → Render tarjeta → Recalcular estadísticas.
-
-Gracias a esta arquitectura, el sistema evita desincronización entre estado visual y datos persistidos, manteniendo integridad incluso tras recargas de la aplicación.
-
 
 ## 12. Persistencia y funcionamiento offline
 
