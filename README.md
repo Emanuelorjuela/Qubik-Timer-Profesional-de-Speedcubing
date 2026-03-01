@@ -122,22 +122,23 @@ La preferencia seleccionada se guarda en un segundo object store de IndexedDB ll
 
 ---
 
-## 14. Sistema de flujo de datos y persistencia
+## 12. Sistema de flujo de datos, persistencia y funcionamiento offline
 
-El sistema implementa un flujo de datos secuencial donde la base de datos actúa como fuente única de verdad. Cada acción relevante —registro de tiempo, aplicación de penalización o eliminación— sigue el mismo patrón estructural para garantizar coherencia entre almacenamiento, tabla, tarjeta de solve y estadísticas.
+El sistema implementa un flujo de datos secuencial donde la base de datos actúa como fuente única de verdad. Cada acción relevante —registro de tiempo, aplicación de penalización o eliminación— sigue el mismo patrón estructural para garantizar coherencia entre almacenamiento, tabla de tiempos, tarjeta de solve y estadísticas.
 
-Cuando el cronómetro se detiene, se construye el objeto *solve* con todos sus atributos: tiempo base, scramble activo, fecha y estados de penalización inicializados. Este objeto se guarda inmediatamente en IndexedDB dentro del object store `cube3x3`. Solo después de confirmarse la escritura se procede al renderizado.
+Cuando el cronómetro se detiene, se construye el objeto *solve* con todos sus atributos: tiempo base, scramble activo, fecha y estados de penalización inicializados (`masDos: false`, `dnf: false`). Este objeto se guarda inmediatamente en IndexedDB dentro del object store `cube3x3`. Solo tras confirmarse la escritura se ejecuta el proceso de renderizado.
 
-Primero se actualiza la tabla de tiempos insertando la nueva solve vinculada a su identificador persistido. Luego, si corresponde, se renderiza o actualiza la tarjeta de la solve seleccionada. Finalmente, el sistema recalcula todas las estadísticas tomando exclusivamente los datos almacenados en la base de datos, evitando cálculos sobre estados temporales del frontend.
+Primero se actualiza la tabla de tiempos insertando la nueva solve vinculada a su identificador persistido. Luego se renderiza o actualiza la tarjeta de la solve seleccionada. Finalmente, el sistema recalcula todas las estadísticas utilizando exclusivamente los datos almacenados en la base de datos, evitando cálculos basados en estados temporales del frontend.
 
-Las penalizaciones (+2 y DNF) siguen el mismo flujo. Al aplicarse, el registro se actualiza en IndexedDB modificando sus propiedades internas. Tras la confirmación, se re-renderiza la fila correspondiente, se actualiza la tarjeta y se recalculan las métricas dependientes. Esto garantiza que cualquier cambio mantenga consistencia estructural y persistencia completa.
+Las penalizaciones (+2 y DNF) reinician el mismo flujo. Cuando se aplican, el registro correspondiente se actualiza directamente en IndexedDB modificando sus propiedades internas (`masDos`, `dnf` y, si aplica, el tiempo ajustado). Estos valores se almacenan como `true` o `false` en la base de datos, garantizando persistencia real del estado. Una vez confirmada la actualización, la modificación se refleja simultáneamente en la tabla de tiempos, en la tarjeta de la solve y en el recálculo completo de estadísticas. De este modo, la penalización no es solo visual, sino estructural y persistente.
 
+El flujo general puede resumirse como:
 
-## 12. Persistencia y funcionamiento offline
+Cronómetro → Creación de solve → Escritura/Actualización en IndexedDB → Render tabla → Render tarjeta → Recalcular estadísticas.
 
-Tanto cube3x3 como promDB se almacenan de forma persistente en IndexedDB. Esto permite que, al cerrar o reiniciar la aplicación, todos los tiempos, penalizaciones, estadísticas y configuraciones permanezcan intactos. Al iniciarse nuevamente, el sistema reconstruye el estado completo del usuario y recalcula las métricas correspondientes sin pérdida de información.
+Tanto `cube3x3` como `promDB` se almacenan de forma persistente en IndexedDB, lo que permite conservar tiempos, penalizaciones y métricas incluso después de cerrar o reiniciar la aplicación. Al iniciarse nuevamente, el sistema reconstruye el estado completo leyendo desde la base de datos y recalculando las estadísticas necesarias.
 
-El proyecto está diseñado bajo un enfoque offline-first y no depende de servicios externos para su funcionamiento principal.
+La arquitectura sigue un enfoque *offline-first*, sin dependencia de servicios externos para su funcionamiento principal, garantizando continuidad operativa y consistencia de datos en todo momento.
 
 ---
 
