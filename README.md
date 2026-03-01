@@ -1,4 +1,4 @@
-# Qubik Timer – Documentación Técnica del Sistema
+# Qubik - Timer Profesional para Speedcubing
 
 ## 1. Descripción general del proyecto
 
