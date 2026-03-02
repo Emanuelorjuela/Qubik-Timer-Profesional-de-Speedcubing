@@ -6,7 +6,7 @@ Qubik Timer es una aplicación web diseñada para la práctica formal de speedcu
 
 <p align="center">
   <img src="./src/multimedia/Speedcubing.gif" width="300">
-  <img src="./src/multimedia/Aplicacion.png" width="342">
+  <img src="./src/multimedia/Aplicacion.png" width="341">
 </p>
 
 La aplicación reproduce ese flujo competitivo completo dentro de un entorno digital. Genera combinaciones válidas, mide el tiempo de cada resolución con lógica de activación controlada, registra cada solución en almacenamiento persistente y calcula estadísticas oficiales que se actualizan en tiempo real. Cada nuevo registro impacta inmediatamente en los promedios visibles sin necesidad de recargar la aplicación. El sistema está pensado no solo como cronómetro, sino como entorno integral de entrenamiento y análisis de desempeño.
