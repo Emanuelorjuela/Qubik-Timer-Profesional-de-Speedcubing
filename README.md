@@ -13,7 +13,7 @@ La aplicación reproduce ese flujo competitivo completo dentro de un entorno dig
 
 ---
 
-## 2. Tecnologías utilizadas y fundamentos técnicos
+## 2. Tecnologías utilizadas y modularizacion
 
 Qubik Timer está desarrollado íntegramente en JavaScript Vanilla (ES Modules), sin frameworks ni librerías externas de interfaz. Esta decisión responde a un enfoque arquitectónico orientado al control total del flujo de datos, la manipulación explícita del DOM y la separación estricta de responsabilidades por módulos. La aplicación se organiza en capas lógicas (core, scrambler, database, averages, UI), manteniendo un único punto de entrada y evitando múltiples dependencias implícitas.
 
