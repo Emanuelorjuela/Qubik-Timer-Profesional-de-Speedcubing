@@ -38,7 +38,7 @@ El generador no produce secuencias arbitrarias sin restricciones. Incorpora regl
 Estas restricciones garantizan que cada combinación sea limpia, no reducible y representativa de un entorno competitivo real. El objetivo es mantener integridad técnica y evitar mezclas artificialmente débiles.
 
 <p align="center">
-  <img src="./src/multimedia/Generador.png" width="670">
+  <img src="./src/multimedia/Generador.png" width="650">
 </p>
 
 La combinación generada se inserta en un input que analiza cada movimiento en tiempo real. Cada instrucción válida se ejecuta inmediatamente sobre el render del cubo. El cubo siempre parte de un estado completamente armado, y únicamente los movimientos válidos presentes en el input modifican su estado lógico y visual.
@@ -50,6 +50,11 @@ La combinación generada se inserta en un input que analiza cada movimiento en t
 El usuario ejecuta la combinación mostrada en su cubo físico siguiendo la notación oficial. El objetivo es que el cubo real quede en la misma configuración que el render de la aplicación.
 
 Esta sincronización asegura coherencia entre el entorno físico y el digital. El sistema no resuelve el cubo automáticamente ni simula resultados; reproduce el contexto real de entrenamiento competitivo donde el usuario interactúa con su propio cubo mientras el sistema registra el desempeño.
+
+<p align="center">
+  <img src="./src/multimedia/Digital.png" width="300">
+  <img src="./src/multimedia/Real.png" width="300">
+</p>
 
 ---
 
