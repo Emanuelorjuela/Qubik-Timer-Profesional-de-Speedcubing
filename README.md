@@ -24,7 +24,7 @@ Como resultado, el estado lógico del cubo siempre es consistente con las reglas
 
 La combinación se genera mediante un algoritmo que produce entre 20 y 23 movimientos aleatorios, alineándose con los estándares utilizados en entornos competitivos.
 
-El generador no produce secuencias arbitrarias sin restricciones. Incorpora reglas específicas para evitar patrones redundantes o algebraicamente simplificables. Por ejemplo, evita combinaciones como R R (equivalente a R2), L L L (equivalente a L’) o patrones de capas paralelas como R L R que pueden reducirse mediante simplificación matemática.
+El generador no produce secuencias arbitrarias sin restricciones. Incorpora reglas específicas para evitar patrones redundantes o algebraicamente simplificables. Por ejemplo, evita combinaciones como R R (equivalente a R2), L L L (equivalente a L’) o patrones de capas paralelas como R L R (equivalente a R2 L) que pueden reducirse mediante simplificación matemática.
 
 Estas restricciones garantizan que cada combinación sea limpia, no reducible y representativa de un entorno competitivo real. El objetivo es mantener integridad técnica y evitar mezclas artificialmente débiles.
 
