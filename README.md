@@ -170,6 +170,10 @@ Single representa el mejor tiempo individual registrado en la base de datos, exc
 
 La Media calcula el promedio global de todos los tiempos almacenados. El límite de DNF es dinámico y depende del número total de registros. Si existen menos de 100 tiempos, se aplica la lógica de la estadística inmediatamente superior más cercana. Por ejemplo, con 30 tiempos se utiliza la lógica de Ao50. 52 tiempos se toman como referencia como un bloque equivalente a Ao75 con 4 DNFs, aunque no se muestre en el frontend, ya que se usa únicamente para cálculo interno. Cuando el total supera los 100 tiempos, el límite de DNF se acumula por bloques; por ejemplo, con 230 tiempos se suman dos bloques de 100 (5 + 5 DNFs) y un bloque de 50 (3 DNFs), dando un límite total de 13 DNFs.
 
+<p align="center">
+  <img src="./src/multimedia/Actual.gif" width="600">
+</p>
+
 Todas las estadísticas se recalculan automáticamente en tiempo real tras cualquier cambio en los registros.
 
 ---
