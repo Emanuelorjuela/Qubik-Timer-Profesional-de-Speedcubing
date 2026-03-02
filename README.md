@@ -201,7 +201,7 @@ Primero se actualiza la tabla de tiempos insertando la nueva solve vinculada a s
 Las penalizaciones (+2 y DNF) reinician el mismo flujo. Cuando se aplican, el registro correspondiente se actualiza directamente en IndexedDB modificando sus propiedades internas (`masDos`, `dnf` y, si aplica, el tiempo ajustado). Estos valores se almacenan como `true` o `false` en la base de datos, garantizando persistencia real del estado. Una vez confirmada la actualización, la modificación se refleja simultáneamente en la tabla de tiempos, en la tarjeta de la solución y en el recálculo completo de estadísticas. De este modo, la penalización no es solo visual, sino estructural y persistente.
 
 <p align="center">
-  <img src="./src/multimedia/Diagrama.png" width="400">
+  <img src="./src/multimedia/Diagrama.png" width="500">
 </p>
 
 Tanto `cube3x3` como `promDB` se almacenan de forma persistente en IndexedDB, lo que permite conservar tiempos, penalizaciones y métricas incluso después de cerrar o reiniciar la aplicación. Al iniciarse nuevamente, el sistema reconstruye el estado completo leyendo desde la base de datos y recalculando las estadísticas necesarias.
