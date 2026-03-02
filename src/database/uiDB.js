@@ -1,22 +1,16 @@
-/*
- Módulo de interfaz para:
- - Renderizar la lista de solves guardados.
- - Mostrar información detallada de un solve en una card.
- - Permitir modificar estados (+2, DNF) y eliminar registros.
- - Sincronizar cambios con IndexedDB y actualizar promedios.
-*/
 
-import { eliminar, leer } from "./crud.js";
-import { db } from "./dbInit.js";
-import { marcarDNF, marcarDos } from "../solves/solveState.js";
-import { scrambler, estadoCero } from "../scrambler/scramblerEngine.js";
-import { crearCaras } from "../scrambler/cube.js";
-import { promedios_front } from "../averages/promUi.js";
+import { eliminar, leer } from "./crud.js";            
+import { db } from "./dbInit.js";                         
+import { marcarDNF, marcarDos } from "../solves/solveState.js"; 
+import { scrambler, estadoCero } from "../scrambler/scramblerEngine.js"; 
+import { crearCaras } from "../scrambler/cube.js";         
+import { promedios_front } from "../averages/promUi.js";   
 
 /*
- Referencias a contenedores principales del DOM:
- - archivador: lista visible de solves.
- - contenedor: wrapper donde se insertan overlays (cards).
+ Referencias principales del DOM:
+
+ - archivador: contenedor donde se listan los solves.
+ - contenedor: wrapper general donde se insertan overlays (cards).
 */
 export const archivador = document.querySelector(".archivador")
 export const contenedor = document.querySelector(".contenedor")
@@ -24,17 +18,17 @@ export const contenedor = document.querySelector(".contenedor")
 /*
  dataDiv(idx, t, dnf, masDos)
 
- Renderiza un solve en la lista principal.
+ Renderiza un solve dentro de la lista principal.
 
  Parámetros:
  - idx: índice visual (comienza en 1).
  - t: tiempo base almacenado.
- - dnf: booleano de estado DNF.
- - masDos: booleano de penalización +2.
+ - dnf: estado booleano DNF.
+ - masDos: estado booleano +2.
 */
 export const dataDiv = (idx, t, dnf, masDos) => {
 
-    // Estructura base del registro
+    // Creación de nodos base que conforman un registro visual
     const data = document.createElement("DIV")
     const record = document.createElement("DIV")
     const indice = document.createElement("SPAN")
@@ -44,7 +38,7 @@ export const dataDiv = (idx, t, dnf, masDos) => {
     const btn2 = document.createElement("BUTTON") // DNF
     const btn3 = document.createElement("BUTTON") // Delete
 
-    // Clases CSS
+    // Asignación de clases para estilos CSS
     data.classList.add("data")
     record.classList.add("record")
     indice.classList.add("indice")
@@ -55,7 +49,7 @@ export const dataDiv = (idx, t, dnf, masDos) => {
     btn2.classList.add("mini_btn", "dnf")
     btn3.classList.add("mini_btn", "delete")
 
-    // Ensamblaje de nodos
+    // Ensamblaje jerárquico del DOM
     btns.appendChild(btn1)
     btns.appendChild(btn2)
     btns.appendChild(btn3)
@@ -66,7 +60,7 @@ export const dataDiv = (idx, t, dnf, masDos) => {
     data.appendChild(record)
     data.appendChild(btns)
 
-    // Texto de botones
+    // Etiquetas visibles
     btn1.textContent = "+2"
     btn2.textContent = "DNF"
     btn3.textContent = "X"
@@ -74,10 +68,10 @@ export const dataDiv = (idx, t, dnf, masDos) => {
     indice.textContent = idx + ".  "
 
     /*
-     Lógica de visualización según estado:
-     - DNF tiene prioridad.
-     - Luego +2.
-     - Luego tiempo normal.
+     Lógica de prioridad visual:
+     1. DNF tiene precedencia absoluta.
+     2. Luego penalización +2.
+     3. En caso contrario, tiempo normal.
     */
     if (dnf === true) {
         time.textContent = "DNF"
@@ -91,15 +85,17 @@ export const dataDiv = (idx, t, dnf, masDos) => {
         time.textContent = Number(t).toFixed(2)
     }
 
-    // Eventos principales
+    // Eliminación directa desde lista
     btn3.addEventListener("click", () => {
         eliminar(idx - 1, "database")
     })
 
+    // Aplicación de DNF desde lista
     btn2.addEventListener("click", () => {
         marcarDNF(idx - 1, time)
     })
 
+    // Aplicación de +2 desde lista
     btn1.addEventListener("click", () => {
         marcarDos(idx - 1, time)
     })
@@ -109,7 +105,7 @@ export const dataDiv = (idx, t, dnf, masDos) => {
         datoCard(idx - 1)
     })
 
-    // Inserta el solve al inicio de la lista
+    // Inserta el registro al inicio (orden descendente visual)
     archivador.prepend(data)
     archivador.scrollTop = 0
 }
@@ -117,8 +113,8 @@ export const dataDiv = (idx, t, dnf, masDos) => {
 /*
  datoCard(index)
 
- Busca en IndexedDB el solve por índice
- y crea una card detallada con su información.
+ Recorre IndexedDB mediante cursor hasta encontrar el solve
+ correspondiente al índice visual y genera su card detallada.
 */
 export const datoCard = (index) => {
 
@@ -148,13 +144,16 @@ export const datoCard = (index) => {
 /*
  crearCard(dato, index)
 
- Genera un overlay con información completa del solve:
- - Tiempo
- - Estado (+2 / DNF)
- - Fecha
- - Scramble
- - Mini representación del cubo
- - Acciones (copiar, eliminar, modificar estados)
+ Construye un overlay con:
+
+ - Tiempo y estado.
+ - Tipo de cubo.
+ - Fecha.
+ - Scramble.
+ - Mini representación visual del cubo.
+ - Controles de edición y eliminación.
+
+ Esta vista opera directamente sobre el registro persistido.
 */
 export const crearCard = (dato, index) => {
 
@@ -165,7 +164,7 @@ export const crearCard = (dato, index) => {
     card.classList.add("card")
     overlayCard.appendChild(card)
 
-    // ----- Botones superiores -----
+    // Botonera superior: copiar, eliminar, cerrar
     const btnsTop = document.createElement("div")
     btnsTop.classList.add("btns_card_top")
 
@@ -184,14 +183,14 @@ export const crearCard = (dato, index) => {
     btnsTop.append(btnCopy, btnDelete, btnClose)
     card.appendChild(btnsTop)
 
-    // ----- Sección central -----
+    // Contenedor central de información
     const optionsCard = document.createElement("div")
     optionsCard.classList.add("options_card")
 
     const timeCard = document.createElement("span")
     timeCard.classList.add("time_card")
 
-    // Estado visual del tiempo
+    // Representación del estado del tiempo
     if (!dato.dnf && !dato.masDos) {
         timeCard.textContent = dato.time
     } else if (dato.dnf) {
@@ -202,7 +201,7 @@ export const crearCard = (dato, index) => {
 
     optionsCard.appendChild(timeCard)
 
-    // ----- Botones inferiores -----
+    // Botonera inferior: tipo de cubo y penalizaciones
     const btnsBottom = document.createElement("div")
     btnsBottom.classList.add("btn_card_bottom")
 
@@ -218,6 +217,7 @@ export const crearCard = (dato, index) => {
     btnDNF.classList.add("btn_card_end", "dnf")
     btnDNF.textContent = "DNF"
 
+    // Indicadores visuales si ya existe penalización
     if (dato.masDos) btnMas2.style.backgroundColor = "orange"
     if (dato.dnf) btnDNF.style.backgroundColor = "red"
 
@@ -231,7 +231,7 @@ export const crearCard = (dato, index) => {
 
     card.appendChild(optionsCard)
 
-    // ----- Scramble y mini cubo -----
+    // Sección de scramble y mini cubo renderizado
     const scrambleCard = document.createElement("div")
     scrambleCard.classList.add("scramble_card")
 
@@ -241,7 +241,7 @@ export const crearCard = (dato, index) => {
     const mini_cubo = document.createElement("div")
     mini_cubo.classList.add("mini_cubo")
 
-    // Inicializa cubo y aplica scramble
+    // Inicialización estructural y aplicación del scramble persistido
     crearCaras(mini_cubo)
     estadoCero(mini_cubo)
     scrambler(mini_cubo, dato.scramble.split(" "))
@@ -258,103 +258,132 @@ export const crearCard = (dato, index) => {
 
     contenedor.appendChild(overlayCard)
 
-    // ----- Eventos -----
-
+    // Cierre de overlay
     btnClose.addEventListener("click", (e) => {
         e.target.closest(".overlay_card").remove()
     })
 
+    // Eliminación desde card
     btnDelete.addEventListener("click", (e) => {
         e.target.closest(".overlay_card").remove()
         eliminar(index, "card")
     })
 
     /*
-     Toggle DNF:
-     - Alterna registro.dnf
-     - Fuerza masDos = false
-     - Actualiza DB
-     - Re-renderiza lista
-     - Recalcula promedios
+     Evento DNF dentro de la card:
+
+     - Alterna el estado booleano en IndexedDB.
+     - Desactiva +2 si estaba activo.
+     - Actualiza visualmente la card.
+     - Recarga la lista principal.
+     - Recalcula promedios.
     */
     btnDNF.addEventListener("click", () => {
 
-        let transaccion = db.transaction("cube3x3", "readwrite")
-        let store = transaccion.objectStore("cube3x3")
-        let request = store.openCursor()
-        let contador = 0
+        let transaccion = db.transaction("cube3x3", "readwrite");
+        let store = transaccion.objectStore("cube3x3");
+        let request = store.openCursor();
+        let contador = 0;
 
         request.onsuccess = (e) => {
-            let cursor = e.target.result
+            let cursor = e.target.result;
             if (cursor) {
                 if (contador === index) {
+                    let registro = cursor.value;
 
-                    let registro = cursor.value
-                    registro.dnf = !registro.dnf
-                    registro.masDos = false
+                    registro.dnf = !registro.dnf;
+                    registro.masDos = false;
 
-                    cursor.update(registro)
+                    if (registro.dnf) {
+                        btnDNF.style.backgroundColor = "red";
+                        btnMas2.style.backgroundColor = "#444";
+                        timeCard.textContent = registro.timeDNF;
+                    } else {
+                        btnDNF.style.backgroundColor = "#444";
+                        timeCard.textContent = Number(registro.time).toFixed(2);
+                    }
+
+                    cursor.update(registro);
 
                     leer((array) => {
-                        archivador.innerHTML = ""
+                        archivador.innerHTML = "";
                         array.forEach((item, idx) => {
-                            dataDiv(idx + 1, item.time, item.dnf, item.masDos)
-                        })
-                    })
+                            dataDiv(idx + 1, item.time, item.dnf, item.masDos);
+                        });
+                    });
 
-                    promedios_front()
-                    return
+                    return;
                 }
-                contador++
-                cursor.continue()
+                contador++;
+                cursor.continue();
             }
-        }
-    })
+            promedios_front()
+        };
+
+        request.onerror = (e) => {
+            console.error("Error al actualizar DNF:", e.target.error);
+        };
+    });
 
     /*
-     Toggle +2:
-     - Alterna registro.masDos
-     - Fuerza dnf = false
-     - Actualiza DB
-     - Re-renderiza lista
-     - Recalcula promedios
+     Evento +2 dentro de la card:
+
+     - Alterna penalización en la base de datos.
+     - Desactiva DNF si estaba activo.
+     - Actualiza representación visual.
+     - Refresca lista.
+     - Recalcula estadísticas.
     */
     btnMas2.addEventListener("click", () => {
 
-        let transaccion = db.transaction("cube3x3", "readwrite")
-        let store = transaccion.objectStore("cube3x3")
-        let request = store.openCursor()
-        let contador = 0
+        let transaccion = db.transaction("cube3x3", "readwrite");
+        let store = transaccion.objectStore("cube3x3");
+        let request = store.openCursor();
+        let contador = 0;
 
         request.onsuccess = (e) => {
-            let cursor = e.target.result
+            let cursor = e.target.result;
             if (cursor) {
                 if (contador === index) {
+                    let registro = cursor.value;
 
-                    let registro = cursor.value
-                    registro.masDos = !registro.masDos
-                    registro.dnf = false
+                    registro.masDos = !registro.masDos;
+                    registro.dnf = false;
 
-                    cursor.update(registro)
+                    if (registro.masDos) {
+                        btnMas2.style.backgroundColor = "orange";
+                        btnDNF.style.backgroundColor = "#444";
+                        timeCard.textContent = Number(registro.timeMasDos).toFixed(2)+"+";
+                    } else {
+                        btnMas2.style.backgroundColor = "#444";
+                        timeCard.textContent = Number(registro.time).toFixed(2);
+                    }
+
+                    cursor.update(registro);
 
                     leer((array) => {
-                        archivador.innerHTML = ""
+                        archivador.innerHTML = "";
                         array.forEach((item, idx) => {
-                            dataDiv(idx + 1, item.time, item.dnf, item.masDos)
-                        })
-                    })
+                            dataDiv(idx + 1, item.time, item.dnf, item.masDos);
+                        });
+                    });
 
-                    promedios_front()
-                    return
+                    return;
                 }
-                contador++
-                cursor.continue()
+                contador++;
+                cursor.continue();
             }
-        }
+            promedios_front()
+        };
+
+        request.onerror = (e) => {
+            console.error("Error al actualizar Mas DOs:", e.target.error);
+        };
+    });
+
+    // Copia el scramble persistido al portapapeles
+    btnCopy.addEventListener("click",()=>{
+        navigator.clipboard.writeText(dato.scramble);
     })
 
-    // Copiar scramble al portapapeles
-    btnCopy.addEventListener("click", () => {
-        navigator.clipboard.writeText(dato.scramble)
-    })
 }
