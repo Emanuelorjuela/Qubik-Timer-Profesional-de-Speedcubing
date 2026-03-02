@@ -142,6 +142,10 @@ Todos estos cambios impactan automáticamente en las estadísticas visibles, ya 
 
 Cada tiempo registrado puede seleccionarse. Al hacerlo, se abre un overlay que muestra una vista detallada de la solución almacenada en la base de datos. Esta vista incluye el tiempo registrado, la fecha, el tipo de cubo, la combinación en notación oficial y un render del estado correspondiente.
 
+<p align="center">
+  <img src="./src/multimedia/Overlay.gif" width="650">
+</p>
+
 Desde este overlay también pueden aplicarse penalizaciones, copiar el scramble, cerrar la vista o eliminar la resolución. Cualquier acción realizada se sincroniza inmediatamente con la base de datos y con el frontend, manteniendo coherencia total entre estado visual y persistencia.
 
 ---
