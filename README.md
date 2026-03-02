@@ -146,4 +146,14 @@ El proyecto se encuentra en etapa activa de construcción. La lógica principal 
 
 Actualmente deben pulirse aspectos visuales como overlays de estadísticas y diseño general antes de su lanzamiento formal. La primera versión estará orientada exclusivamente a escritorio y centrada en el cubo 3x3. Posteriormente, el sistema escalará incorporando nuevos tipos de cubos, estadísticas más personalizables y adaptación completa para dispositivos móviles.
 
+## 12. Autor
+
+**Emanuel Orjuela Barbosa**
+
+Correo: emanuelorjuelabarbosa12@gmail.com
+
+Instagram: https://www.instagram.com/qubik_timer
+
+Github: https://github.com/Emanuelorjuela
+
 Qubik Timer está concebido como una herramienta de práctica competitiva y, al mismo tiempo, como demostración de arquitectura frontend modular, modelado matemático complejo y gestión avanzada de almacenamiento local en JavaScript puro.
