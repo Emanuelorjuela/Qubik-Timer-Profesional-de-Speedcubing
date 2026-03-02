@@ -85,7 +85,7 @@ El sistema incorpora un cronómetro diseñado siguiendo la lógica utilizada en 
 Para iniciarlo, el usuario debe mantener presionada la barra espaciadora durante al menos 300 milisegundos y luego soltarla. Este retraso intencional evita activaciones accidentales y simula el comportamiento de timers físicos de competencia.
 
 <p align="center">
-  <img src="./src/multimedia/Cronometro.gif" width="650">
+  <img src="./src/multimedia/Cronometro.gif" width="750">
 </p>
 
 El tiempo comienza al soltar la tecla y continúa hasta que se vuelve a presionar la barra espaciadora para detenerlo. Al finalizar la medición, el cubo regresa automáticamente a su estado resuelto y se genera un nuevo scramble para la siguiente resolución. Esto mantiene un flujo continuo de entrenamiento sin reinicios manuales adicionales.
