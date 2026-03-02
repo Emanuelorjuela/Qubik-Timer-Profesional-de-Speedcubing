@@ -40,7 +40,7 @@ Esta sincronización asegura coherencia entre el entorno físico y el digital. E
 
 ---
 
-## 5. Controles de gestión del scramble
+## 5. Controles de gestión de la combinacion
 
 La interfaz incorpora dos controles principales para gestionar el estado del cubo y la mezcla activa.
 
