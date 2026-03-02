@@ -131,7 +131,7 @@ Si se aplica +2, el tiempo aumenta en dos segundos tanto en el frontend como en 
 
 <p align="center">
   <img src="./src/multimedia/+2.png" width="300">
-  <img src="./src/multimedia/DNF.png" width="295">
+  <img src="./src/multimedia/DNF.png" width="292">
 </p>
 
 Todos estos cambios impactan automáticamente en las estadísticas visibles, ya que el sistema recalcula las métricas en tiempo real tras cualquier modificación.
