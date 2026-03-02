@@ -53,7 +53,7 @@ Esta sincronización asegura coherencia entre el entorno físico y el digital. E
 
 <p align="center">
   <img src="./src/multimedia/Digital.png" width="300">
-  <img src="./src/multimedia/real.png" width="205">
+  <img src="./src/multimedia/real.png" width="207">
 </p>
 
 ---
