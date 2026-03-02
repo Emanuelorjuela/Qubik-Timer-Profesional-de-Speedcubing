@@ -19,6 +19,10 @@ El sistema implementa un modelo matemático de un cubo Rubik 3x3 representado vi
 
 Aunque la representación es bidimensional, la lógica interna replica de forma exacta el comportamiento físico de un cubo tridimensional real. Cada sticker está representado mediante clases que indican su color. Internamente, el cubo no se manipula como una imagen, sino como una estructura indexada donde cada posición representa un sticker específico.
 
+<p align="center">
+  <img src="./src/multimedia/Cubo.gif" width="500">
+</p>
+
 Las funciones de movimiento operan sobre índices que representan posiciones concretas dentro de esa estructura. Cuando se ejecuta un movimiento —R, L, U, D, F, B y sus variantes inversas o dobles— el sistema intercambia matemáticamente las clases de color entre los índices correspondientes. Esto simula la rotación real de la cara seleccionada y de las capas adyacentes afectadas por el giro.
 
 Como resultado, el estado lógico del cubo siempre es consistente con las reglas físicas de un cubo real. No existen simplificaciones visuales desconectadas del modelo interno; cada render corresponde exactamente al estado matemático actual.
