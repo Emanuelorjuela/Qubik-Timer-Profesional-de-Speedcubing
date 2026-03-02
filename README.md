@@ -96,6 +96,27 @@ El tiempo comienza al soltar la tecla y continúa hasta que se vuelve a presiona
 
 Cada vez que el cronómetro se detiene, se construye una estructura de datos que representa formalmente la solve realizada. Esta estructura incluye el tiempo obtenido, el scramble utilizado, la fecha en formato en-US, el tipo de cubo y dos posibles estados de penalización: +2 y DNF.
 
+```js
+	let solve = {
+
+	time: cronometro.textContent,
+	scramble: notacion.value,
+	date: new Date().toLocaleString('en-US', { 
+		month: 'long', 
+		day: '2-digit', 
+		year: 'numeric', 
+		hour: 'numeric', 
+		minute: '2-digit', 
+		hour12: true 
+	}),
+	dnf: false,
+	masDos: false,
+	timeMasDos: Number(cronometro.textContent)+2,
+	timeDNF: "DNF",
+	typeCube:"3x3"
+};
+```
+
 La penalización +2 se aplica cuando el cubo está resuelto pero requiere un movimiento adicional menor; en ese caso, se suman dos segundos al tiempo registrado. La penalización DNF (Did Not Finish) se aplica cuando el cubo no está correctamente resuelto y requiere más de un movimiento para completarse.
 
 Por defecto, ambas penalizaciones se inicializan en false. Todos estos datos se almacenan en IndexedDB dentro de un object store llamado cube3x3, garantizando persistencia local y funcionamiento offline.
