@@ -78,7 +78,7 @@ Esta sincronización asegura coherencia entre el entorno físico y el digital. E
 
 ## 6. Controles de gestión de la combinación 
 
-La interfaz incorpora dos controles principales para gestionar el estado del cubo y la mezcla activa.
+La interfaz incorpora tres controles principales para gestionar el estado del cubo y la mezcla activa.
 
 El botón R (Reiniciar) devuelve el cubo a su estado completamente resuelto y genera automáticamente una nueva combinación. Esta combinación se inserta en el input y se ejecuta inmediatamente para renderizar la nueva configuración.
 
