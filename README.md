@@ -29,6 +29,21 @@ Como resultado, el estado lógico del cubo siempre es consistente con las reglas
 
 ---
 
+##3. Tecnologías utilizadas y fundamentos técnicos
+
+Qubik Timer está desarrollado íntegramente en JavaScript Vanilla (ES Modules), sin frameworks ni librerías externas de interfaz. Esta decisión responde a un enfoque arquitectónico orientado al control total del flujo de datos, la manipulación explícita del DOM y la separación estricta de responsabilidades por módulos. La aplicación se organiza en capas lógicas (core, scrambler, database, averages, UI), manteniendo un único punto de entrada y evitando múltiples dependencias implícitas.
+
+El modelo del cubo, el generador de combinaciones, el cronómetro competitivo y el sistema de estadísticas reglamentadas están implementados mediante lógica algorítmica propia. No se utilizan motores gráficos ni librerías matemáticas externas; toda la simulación se basa en estructuras indexadas y transformaciones deterministas de estado.
+
+Para la persistencia se utiliza IndexedDB, la base de datos nativa del navegador orientada a almacenamiento estructurado y de gran volumen. El sistema define dos object stores principales:
+
+* cube3x3: almacena cada solve con su tiempo, scramble, fecha y estados de penalización.
+* promDB: almacena la configuración persistente de las métricas Average of X (actual/best).
+
+
+
+---
+
 ## 3. Generación de combinaciones limpias
 
 La combinación se genera mediante un algoritmo que produce entre 20 y 23 movimientos aleatorios, alineándose con los estándares utilizados en entornos competitivos.
