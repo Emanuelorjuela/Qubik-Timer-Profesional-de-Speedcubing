@@ -38,7 +38,7 @@ El generador no produce secuencias arbitrarias sin restricciones. Incorpora regl
 Estas restricciones garantizan que cada combinación sea limpia, no reducible y representativa de un entorno competitivo real. El objetivo es mantener integridad técnica y evitar mezclas artificialmente débiles.
 
 <p align="center">
-  <img src="./src/multimedia/Generador.png" width="400">
+  <img src="./src/multimedia/Generador.png" width="500">
 </p>
 
 La combinación generada se inserta en un input que analiza cada movimiento en tiempo real. Cada instrucción válida se ejecuta inmediatamente sobre el render del cubo. El cubo siempre parte de un estado completamente armado, y únicamente los movimientos válidos presentes en el input modifican su estado lógico y visual.
