@@ -13,7 +13,20 @@ La aplicación reproduce ese flujo competitivo completo dentro de un entorno dig
 
 ---
 
-## 2. Modelado lógico del cubo 3x3
+## 3. Tecnologías utilizadas y fundamentos técnicos
+
+Qubik Timer está desarrollado íntegramente en JavaScript Vanilla (ES Modules), sin frameworks ni librerías externas de interfaz. Esta decisión responde a un enfoque arquitectónico orientado al control total del flujo de datos, la manipulación explícita del DOM y la separación estricta de responsabilidades por módulos. La aplicación se organiza en capas lógicas (core, scrambler, database, averages, UI), manteniendo un único punto de entrada y evitando múltiples dependencias implícitas.
+
+El modelo del cubo, el generador de combinaciones, el cronómetro competitivo y el sistema de estadísticas reglamentadas están implementados mediante lógica algorítmica propia. No se utilizan motores gráficos ni librerías matemáticas externas; toda la simulación se basa en estructuras indexadas y transformaciones deterministas de estado.
+
+Para la persistencia se utiliza IndexedDB, la base de datos nativa del navegador orientada a almacenamiento estructurado y de gran volumen. El sistema define dos object stores principales:
+
+* cube3x3: almacena cada solve con su tiempo, scramble, fecha y estados de penalización.
+* promDB: almacena la configuración persistente de las métricas Average of X (actual/best).
+
+---
+
+## 3. Modelado lógico del cubo 3x3
 
 El sistema implementa un modelo matemático de un cubo Rubik 3x3 representado visualmente en 2D desde una única perspectiva fija: blanco arriba y verde al frente. Esta orientación corresponde al estándar utilizado en competiciones oficiales para aplicar las combinaciones.
 
@@ -29,22 +42,7 @@ Como resultado, el estado lógico del cubo siempre es consistente con las reglas
 
 ---
 
-##3. Tecnologías utilizadas y fundamentos técnicos
-
-Qubik Timer está desarrollado íntegramente en JavaScript Vanilla (ES Modules), sin frameworks ni librerías externas de interfaz. Esta decisión responde a un enfoque arquitectónico orientado al control total del flujo de datos, la manipulación explícita del DOM y la separación estricta de responsabilidades por módulos. La aplicación se organiza en capas lógicas (core, scrambler, database, averages, UI), manteniendo un único punto de entrada y evitando múltiples dependencias implícitas.
-
-El modelo del cubo, el generador de combinaciones, el cronómetro competitivo y el sistema de estadísticas reglamentadas están implementados mediante lógica algorítmica propia. No se utilizan motores gráficos ni librerías matemáticas externas; toda la simulación se basa en estructuras indexadas y transformaciones deterministas de estado.
-
-Para la persistencia se utiliza IndexedDB, la base de datos nativa del navegador orientada a almacenamiento estructurado y de gran volumen. El sistema define dos object stores principales:
-
-* cube3x3: almacena cada solve con su tiempo, scramble, fecha y estados de penalización.
-* promDB: almacena la configuración persistente de las métricas Average of X (actual/best).
-
-
-
----
-
-## 3. Generación de combinaciones limpias
+## 4. Generación de combinaciones limpias
 
 La combinación se genera mediante un algoritmo que produce entre 20 y 23 movimientos aleatorios, alineándose con los estándares utilizados en entornos competitivos.
 
@@ -60,7 +58,7 @@ La combinación generada se inserta en un input que analiza cada movimiento en t
 
 ---
 
-## 4. Sincronización entre entorno digital y físico
+## 5. Sincronización entre entorno digital y físico
 
 El usuario ejecuta la combinación mostrada en su cubo físico siguiendo la notación oficial. El objetivo es que el cubo real quede en la misma configuración que el render de la aplicación.
 
@@ -73,7 +71,7 @@ Esta sincronización asegura coherencia entre el entorno físico y el digital. E
 
 ---
 
-## 5. Controles de gestión de la combinación 
+## 6. Controles de gestión de la combinación 
 
 La interfaz incorpora dos controles principales para gestionar el estado del cubo y la mezcla activa.
 
@@ -93,7 +91,7 @@ El botón C (Copiar) copia al portapapeles la combinación actualmente activa en
 
 ---
 
-## 6. Cronómetro con lógica de competencia
+## 7. Cronómetro con lógica de competencia
 
 El sistema incorpora un cronómetro diseñado siguiendo la lógica utilizada en competiciones oficiales.
 
@@ -107,7 +105,7 @@ El tiempo comienza al soltar la tecla y continúa hasta que se vuelve a presiona
 
 ---
 
-## 7. Registro estructurado de cada solución
+## 8. Registro estructurado de cada solución
 
 Cada vez que el cronómetro se detiene, se construye una estructura de datos que representa formalmente la solve realizada. Esta estructura incluye el tiempo obtenido, el scramble utilizado, la fecha en formato en-US, el tipo de cubo y dos posibles estados de penalización: +2 y DNF.
 
@@ -138,7 +136,7 @@ Por defecto, ambas penalizaciones se inicializan en false. Todos estos datos se 
 
 ---
 
-## 8. Renderizado inmediato y gestión de penalizaciones
+## 9. Renderizado inmediato y gestión de penalizaciones
 
 Al guardarse un registro en la base de datos, este se renderiza inmediatamente en una tabla del frontend. Cada fila muestra el tiempo y dispone de controles para aplicar +2, DNF o eliminar la resolución.
 
@@ -153,7 +151,7 @@ Todos estos cambios impactan automáticamente en las estadísticas visibles, ya 
 
 ---
 
-## 9. Overlay detallado por solución
+## 10. Overlay detallado por solución
 
 Cada tiempo registrado puede seleccionarse. Al hacerlo, se abre un overlay que muestra una vista detallada de la solución almacenada en la base de datos. Esta vista incluye el tiempo registrado, la fecha, el tipo de cubo, la combinación en notación oficial y un render del estado correspondiente.
 
@@ -165,7 +163,7 @@ Desde este overlay también pueden aplicarse penalizaciones, copiar el scramble,
 
 ---
 
-## 10. Sistema de estadísticas reglamentadas
+## 11. Sistema de estadísticas reglamentadas
 
 La sección de estadísticas contiene 8 métricas principales implementadas bajo reglas formales.
 
@@ -193,7 +191,7 @@ Todas las estadísticas se recalculan automáticamente en tiempo real tras cualq
 
 ---
 
-## 11. Average of X: actual vs best
+## 12. Average of X: actual vs best
 
 Las estadísticas Average of X incluyen un selector que permite alternar entre “actual” y “best”. El modo actual muestra el promedio calculado con los últimos X tiempos registrados. El modo best muestra el mejor promedio histórico de X tiempos existente en la base de datos.
 
@@ -205,7 +203,7 @@ La preferencia seleccionada se guarda en un segundo object store de IndexedDB ll
 
 ---
 
-## 12. Sistema de flujo de datos, persistencia y funcionamiento offline
+## 13. Sistema de flujo de datos, persistencia y funcionamiento offline
 
 El sistema implementa un flujo de datos secuencial donde la base de datos actúa como fuente única de verdad. Cada acción relevante —registro de tiempo, aplicación de penalización o eliminación— sigue el mismo patrón estructural para garantizar coherencia entre almacenamiento, tabla de tiempos, tarjeta de solución y estadísticas.
 
@@ -225,13 +223,13 @@ La arquitectura sigue un enfoque *offline-first*, sin dependencia de servicios e
 
 ---
 
-## 13. Estado actual y proyección
+## 14. Estado actual y proyección
 
 El proyecto se encuentra en etapa activa de construcción. La lógica principal está completamente implementada y funcional, incluyendo modelo matemático del cubo, generador de combinaciones con restricciones, sistema de cronometraje competitivo, persistencia robusta y estadísticas reglamentadas en tiempo real.
 
 Actualmente deben pulirse aspectos visuales como overlays de estadísticas y diseño general antes de su lanzamiento formal. La primera versión estará orientada exclusivamente a escritorio y centrada en el cubo 3x3. Posteriormente, el sistema escalará incorporando nuevos tipos de cubos, estadísticas más personalizables y adaptación completa para dispositivos móviles.
 
-## 12. Autor
+## 15. Autor
 
 **Emanuel Orjuela Barbosa**
 
