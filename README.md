@@ -129,6 +129,11 @@ Al guardarse un registro en la base de datos, este se renderiza inmediatamente e
 
 Si se aplica +2, el tiempo aumenta en dos segundos tanto en el frontend como en la base de datos y cambia visualmente a color naranja. Si se aplica DNF, el tiempo pasa a mostrarse como “DNF”, cambia a color rojo y el campo correspondiente en la base de datos se actualiza a true. El botón de eliminación elimina el registro tanto del frontend como del storage cube3x3.
 
+<p align="center">
+  <img src="./src/multimedia/+2.png" width="300">
+  <img src="./src/multimedia/DNF.png" width="300">
+</p>
+
 Todos estos cambios impactan automáticamente en las estadísticas visibles, ya que el sistema recalcula las métricas en tiempo real tras cualquier modificación.
 
 ---
