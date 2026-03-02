@@ -20,8 +20,8 @@ Qubik Timer está desarrollado íntegramente en JavaScript Vanilla (ES Modules),
 El modelo del cubo, el generador de combinaciones, el cronómetro competitivo y el sistema de estadísticas reglamentadas están implementados mediante lógica algorítmica propia. No se utilizan motores gráficos ni librerías matemáticas externas; toda la simulación se basa en estructuras indexadas y transformaciones deterministas de estado.
 
 <p align="center">
-  <img src="./src/multimedia/Javascript.png" width="300">
-  <img src="./src/multimedia/IndexedDB.png" width="300">
+  <img src="./src/multimedia/Javascript.png" width="200">
+  <img src="./src/multimedia/IndexedDB.png" width="200">
 </p>
 
 Para la persistencia se utiliza IndexedDB, la base de datos nativa del navegador orientada a almacenamiento estructurado y de gran volumen. El sistema define dos object stores principales:
