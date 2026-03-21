@@ -242,7 +242,7 @@ Visual aspects such as statistics overlays and general design still need refinem
 
 Email: [emanuelorjuelabarbosa12@gmail.com](mailto:emanuelorjuelabarbosa12@gmail.com)
 
-Instagram: [https://www.instagram.com/qubik_timer](https://www.instagram.com/qubik_timer)
+Instagram: [https://www.instagram.com/qubik_timer](https://www.instagram.com/qubik.timer)
 
 Github: [https://github.com/Emanuelorjuela](https://github.com/Emanuelorjuela)
 
